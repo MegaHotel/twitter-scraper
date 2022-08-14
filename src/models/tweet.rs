@@ -1,11 +1,11 @@
-use super::date_format;
+use super::utils::*;
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Deserializer, Serialize};
-use serde_json::Value;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Tweet {
-    #[serde(with = "date_format")]
+    #[serde(deserialize_with = "str_to_datetime")]
+    #[serde(serialize_with = "datetime_to_str")]
     created_at: DateTime<Utc>,
     #[serde(rename = "id_str")]
     #[serde(deserialize_with = "int_from_str_id")]
@@ -36,111 +36,29 @@ pub struct Tweet {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-struct Entities {
-    hashtags: Vec<String>,
-    media: Vec<Media>,
+pub struct Entities {
+    pub hashtags: Vec<String>,
+    pub media: Vec<Media>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-struct Media {
-    id: u64,
-    url: String,
+pub struct Media {
+    pub id: u64,
+    pub url: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-struct Card {
+pub struct Card {
     url: String,
     #[serde(rename = "binding_values")]
     #[serde(deserialize_with = "image_url_from_card")]
     image_url: String,
 }
+
 #[derive(Debug, Deserialize, Serialize)]
-enum Platform {
+pub enum Platform {
     Web,
     Android,
     IPhone,
     Unknown,
-}
-
-fn int_from_str_id<'de, D>(deserializer: D) -> Result<u64, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let string: String = Deserialize::deserialize(deserializer)?;
-    string.parse().map_err(serde::de::Error::custom)
-}
-
-fn int_opt_from_str_id<'de, D>(deserializer: D) -> Result<Option<u64>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let string: Value = Deserialize::deserialize(deserializer)?;
-    match string {
-        Value::Null => Ok(None),
-        _ => {
-            let id: u64 = string.as_str().unwrap().parse().unwrap();
-            Ok(Some(id))
-        }
-    }
-}
-
-fn from_entities<'de, D>(deserializer: D) -> Result<Entities, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let entities: Value = Deserialize::deserialize(deserializer)?;
-    let hashtags_array = entities["hashtags"].clone();
-    let hashtags: Vec<String> = hashtags_array
-        .as_array()
-        .unwrap()
-        .iter()
-        .map(|hashtag_object| hashtag_object["text"].as_str().unwrap().to_string())
-        .collect();
-    let media_array: Option<&Vec<Value>> = entities["media"].as_array();
-    if let Some(media) = media_array {
-        let media_vec: Vec<Media> = media
-            .iter()
-            .map(|media_object| Media {
-                id: media_object["id_str"].as_str().unwrap().parse().unwrap(),
-                url: media_object["media_url_https"]
-                    .as_str()
-                    .unwrap()
-                    .to_string(),
-            })
-            .collect();
-        Ok(Entities {
-            hashtags,
-            media: media_vec,
-        })
-    } else {
-        Ok(Entities {
-            hashtags,
-            media: vec![],
-        })
-    }
-}
-
-fn platform_enum_from_source<'de, D>(deserializer: D) -> Result<Platform, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let string: String = Deserialize::deserialize(deserializer)?;
-    match string.as_str() {
-        "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>" => Ok(Platform::Web),
-        "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>" => Ok(Platform::Android),
-        "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>" => Ok(Platform::IPhone),
-        _ => Ok(Platform::Unknown),
-    }
-}
-
-fn image_url_from_card<'de, D>(deserializer: D) -> Result<String, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let card_object: Value = Deserialize::deserialize(deserializer)?;
-    let media_url = card_object["photo_image_full_size"]["image_value"]["url"]
-        .as_str()
-        .unwrap()
-        .to_string();
-    Ok(media_url)
 }

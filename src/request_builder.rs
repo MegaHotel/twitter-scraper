@@ -6,7 +6,7 @@ pub struct RequestConfig<'a> {
 }
 
 pub fn build_request_config<'a>(
-    headers_tuples: &[(&'static str, &'static str)],
+    headers_tuples: &[(&'static str, &'static str); 2],
     query: &'a str,
     cursor: Option<&'a str>,
 ) -> RequestConfig<'a> {
@@ -58,7 +58,7 @@ fn build_path_query<'a>(query: &'a str, cursor: Option<&'a str>) -> Vec<(&'a str
     default_query
 }
 
-fn build_headers(headers_tuples: &[(&'static str, &'static str)]) -> HeaderMap {
+fn build_headers(headers_tuples: &[(&'static str, &'static str); 2]) -> HeaderMap {
     let mut headers_map: HeaderMap = HeaderMap::new();
     headers_tuples.iter().for_each(|header_tuple| {
         headers_map.insert(

@@ -1,1 +1,3 @@
-# twitter-scrapper
+# twitter-scraper
+** FOR EDUCATIONAL PURPOSES ONLY ** 
+

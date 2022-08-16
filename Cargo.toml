@@ -2,6 +2,10 @@
 name = "twitter-scraper"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "Twitter scraper, no login required. FOR EDUCATIONAL PURPOSES ONLY"
+repository = "https://github.com/MegaHotel/twitter-scraper"
+readme = "README.md"
 
 [dependencies]
 reqwest = { version = "0.11", features = ["json"] }

@@ -1,59 +1,59 @@
 use reqwest::header::{HeaderMap, HeaderValue};
 
-pub struct RequestConfig<'a> {
-    pub path_query: Vec<(&'a str, &'a str)>,
+pub struct RequestConfig {
+    pub path_query: Vec<(String, String)>,
     pub headers: HeaderMap,
 }
 
-pub fn build_request_config<'a>(
+pub fn build_request_config(
     headers_tuples: &[(&'static str, &'static str); 2],
-    query: &'a str,
-    cursor: Option<&'a str>,
-) -> RequestConfig<'a> {
+    query: String,
+    cursor: Option<String>,
+) -> RequestConfig {
     RequestConfig {
         path_query: build_path_query(query, cursor),
         headers: build_headers(headers_tuples),
     }
 }
 
-fn build_path_query<'a>(query: &'a str, cursor: Option<&'a str>) -> Vec<(&'a str, &'a str)> {
-    let mut default_query: Vec<(&str, &str)> = vec![
-        ("include_profile_interstitial_type", "1"),
-        ("include_blocking", "1"),
-        ("include_blocked_by", "1"),
-        ("include_followed_by", "1"),
-        ("include_want_retweets", "1"),
-        ("include_mute_edge", "1"),
-        ("include_can_dm", "1"),
-        ("include_can_media_tag", "1"),
-        ("include_ext_has_nft_avatar", "1"),
-        ("skip_status", "1"),
-        ("cards_platform", "Web-12"),
-        ("include_cards", "1"),
-        ("include_ext_alt_text", "true"),
-        ("include_quote_count", "true"),
-        ("include_reply_count", "1"),
-        ("tweet_mode", "extended"),
-        ("include_ext_collab_control", "true"),
-        ("include_entities", "true"),
-        ("include_user_entities", "true"),
-        ("include_ext_media_color", "true"),
-        ("include_ext_media_availability", "true"),
-        ("include_ext_sensitive_media_warning", "true"),
-        ("include_ext_trusted_friends_metadata", "true"),
-        ("send_error_codes", "true"),
-        ("simple_quoted_tweet", "true"),
-        ("count", "20"),
-        ("query_source", ""),
-        ("pc", "1"),
-        ("spelling_corrections", "1"),
-        ("include_ext_edit_control", "false"),
-        ("ext", "mediaStats,highlightedLabel,hasNftAvatar,voiceInfo,enrichments,superFollowMetadata,unmentionInfo,collab_control,vibe"),
+fn build_path_query(query: String, cursor: Option<String>) -> Vec<(String, String)> {
+    let mut default_query: Vec<(String, String)> = vec![
+        ("include_profile_interstitial_type".to_string(), "1".to_string()),
+        ("include_blocking".to_string(), "1".to_string()),
+        ("include_blocked_by".to_string(), "1".to_string()),
+        ("include_followed_by".to_string(), "1".to_string()),
+        ("include_want_retweets".to_string(), "1".to_string()),
+        ("include_mute_edge".to_string(), "1".to_string()),
+        ("include_can_dm".to_string(), "1".to_string()),
+        ("include_can_media_tag".to_string(), "1".to_string()),
+        ("include_ext_has_nft_avatar".to_string(), "1".to_string()),
+        ("skip_status".to_string(), "1".to_string()),
+        ("cards_platform".to_string(), "Web-12".to_string()),
+        ("include_cards".to_string(), "1".to_string()),
+        ("include_ext_alt_text".to_string(), "true".to_string()),
+        ("include_quote_count".to_string(), "true".to_string()),
+        ("include_reply_count".to_string(), "1".to_string()),
+        ("tweet_mode".to_string(), "extended".to_string()),
+        ("include_ext_collab_control".to_string(), "true".to_string()),
+        ("include_entities".to_string(), "true".to_string()),
+        ("include_user_entities".to_string(), "true".to_string()),
+        ("include_ext_media_color".to_string(), "true".to_string()),
+        ("include_ext_media_availability".to_string(), "true".to_string()),
+        ("include_ext_sensitive_media_warning".to_string(), "true".to_string()),
+        ("include_ext_trusted_friends_metadata".to_string(), "true".to_string()),
+        ("send_error_codes".to_string(), "true".to_string()),
+        ("simple_quoted_tweet".to_string(), "true".to_string()),
+        ("count".to_string(), "20".to_string()),
+        ("query_source".to_string(), "".to_string()),
+        ("pc".to_string(), "1".to_string()),
+        ("spelling_corrections".to_string(), "1".to_string()),
+        ("include_ext_edit_control".to_string(), "false".to_string()),
+        ("ext".to_string(), "mediaStats,highlightedLabel,hasNftAvatar,voiceInfo,enrichments,superFollowMetadata,unmentionInfo,collab_control,vibe".to_string()),
 
     ];
-    default_query.push(("q", query));
+    default_query.push(("q".to_string(), query));
     if let Some(cursor_id) = cursor {
-        default_query.push(("cursor", cursor_id));
+        default_query.push(("cursor".to_string(), cursor_id));
     }
     default_query
 }

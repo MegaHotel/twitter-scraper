@@ -18,7 +18,7 @@ pub fn get_users(body_data: &Value) -> Vec<User> {
 }
 pub fn get_next_cursor(
     body_data: &Value,
-    curr_cursor: Option<&'static str>,
+    curr_cursor: Option<String>,
 ) -> Result<String, Box<dyn std::error::Error>> {
     if curr_cursor.is_some() {
         get_default_next_cursor(body_data)

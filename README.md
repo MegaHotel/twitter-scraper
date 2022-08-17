@@ -1,6 +1,7 @@
 # twitter-scraper
-** FOR EDUCATIONAL PURPOSES ONLY ** 
+## **FOR EDUCATIONAL PURPOSES ONLY** 
 
+### Usage example:
 ```rust
 use twitter_scraper::{run, TwitterResults};
 
@@ -11,5 +12,5 @@ fn main() {
 }
 ```
 
-** FOR EDUCATIONAL PURPOSES ONLY ** 
+## **FOR EDUCATIONAL PURPOSES ONLY** 
 

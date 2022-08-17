@@ -1,6 +1,6 @@
 [package]
 name = "twitter-scraper"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 license = "MIT"
 description = "Twitter scraper, no login required. FOR EDUCATIONAL PURPOSES ONLY"

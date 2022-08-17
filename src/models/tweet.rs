@@ -52,7 +52,7 @@ pub struct Card {
     url: String,
     #[serde(rename = "binding_values")]
     #[serde(deserialize_with = "image_url_from_card")]
-    image_url: String,
+    image_url: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]

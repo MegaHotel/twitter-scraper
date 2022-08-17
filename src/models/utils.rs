@@ -96,14 +96,13 @@ where
     }
 }
 
-pub fn image_url_from_card<'de, D>(deserializer: D) -> Result<String, D::Error>
+pub fn image_url_from_card<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
 where
     D: Deserializer<'de>,
 {
     let card_object: Value = Deserialize::deserialize(deserializer)?;
-    let media_url = card_object["photo_image_full_size"]["image_value"]["url"]
-        .as_str()
-        .unwrap()
-        .to_string();
-    Ok(media_url)
+    let media_url: Option<&str> =
+        card_object["photo_image_full_size"]["image_value"]["url"].as_str();
+    let media_url_string: Option<String> = media_url.map(|url| url.to_string());
+    Ok(media_url_string)
 }
